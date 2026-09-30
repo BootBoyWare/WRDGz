@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Distance Calculator</title>
+    <title>2D Distance Calculator - Centered Origin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
@@ -27,7 +23,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight text-white">2D Distance Calculator</h1>
-                    <p class="text-xs text-slate-400">Euclidean geometry & 100m unit scaler</p>
+                    <p class="text-xs text-slate-400">Point A locked to Canvas Center</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -41,7 +37,7 @@
 
     <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- Left Column: Inputs & Math Breakdown -->
+        <!-- Left Column: Inputs & Step-by-step Math -->
         <div class="lg:col-span-6 flex flex-col gap-6">
 
             <!-- Presets Toolbar -->
@@ -49,51 +45,57 @@
                 <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2.5">Quick Presets</span>
                 <div class="flex flex-wrap gap-2">
                     <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="0" data-y1="0" data-x2="3" data-y2="4">
-                        3-4-5 Triangle
+                        3-4-5 Right Triangle
                     </button>
-                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="-5" data-y1="2" data-x2="7" data-y2="10">
-                        Diagonal Span
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="10" data-y1="10" data-x2="16" data-y2="18">
+                        Offset Point A (10,10)
                     </button>
-                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="12" data-y1="8" data-x2="-2" data-y2="-6">
-                        Cross-Quadrant
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="-5" data-y1="12" data-x2="25" data-y2="-30">
+                        Large Span (-5,12) to (25,-30)
                     </button>
                 </div>
             </div>
 
-            <!-- Input Fields Card -->
+            <!-- Coordinate Input Form -->
             <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl relative overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Point 1 -->
-                    <div class="p-4 bg-slate-900/60 rounded-xl border border-indigo-500/20">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
-                            <h2 class="text-sm font-semibold text-indigo-300">Point A (X₁, Y₁)</h2>
+                    <!-- Point A (Center Reference) -->
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-indigo-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
+                                <h2 class="text-sm font-semibold text-indigo-300">Point A (Center Anchor)</h2>
+                            </div>
+                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">Canvas Center</span>
                         </div>
                         <div class="space-y-3">
                             <div>
-                                <label class="text-xs text-slate-400 mb-1 block">X₁ Value</label>
+                                <label class="text-xs text-slate-400 mb-1 block">X₁ Coordinate</label>
                                 <input type="number" id="x1" value="0" step="any" class="w-full bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg px-3 py-2 text-sm text-white mono outline-none transition">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 mb-1 block">Y₁ Value</label>
+                                <label class="text-xs text-slate-400 mb-1 block">Y₁ Coordinate</label>
                                 <input type="number" id="y1" value="0" step="any" class="w-full bg-slate-800 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg px-3 py-2 text-sm text-white mono outline-none transition">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Point 2 -->
-                    <div class="p-4 bg-slate-900/60 rounded-xl border border-emerald-500/20">
-                        <div class="flex items-center gap-2 mb-3">
-                            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
-                            <h2 class="text-sm font-semibold text-emerald-300">Point B (X₂, Y₂)</h2>
+                    <!-- Point B (Target) -->
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-emerald-500/30">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                                <h2 class="text-sm font-semibold text-emerald-300">Point B (Target)</h2>
+                            </div>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Interactive Drag</span>
                         </div>
                         <div class="space-y-3">
                             <div>
-                                <label class="text-xs text-slate-400 mb-1 block">X₂ Value</label>
+                                <label class="text-xs text-slate-400 mb-1 block">X₂ Coordinate</label>
                                 <input type="number" id="x2" value="3" step="any" class="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3 py-2 text-sm text-white mono outline-none transition">
                             </div>
                             <div>
-                                <label class="text-xs text-slate-400 mb-1 block">Y₂ Value</label>
+                                <label class="text-xs text-slate-400 mb-1 block">Y₂ Coordinate</label>
                                 <input type="number" id="y2" value="4" step="any" class="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3 py-2 text-sm text-white mono outline-none transition">
                             </div>
                         </div>
@@ -101,26 +103,25 @@
                 </div>
             </div>
 
-            <!-- Mathematical Breakdown Section -->
             <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl space-y-4">
                 <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
                     <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m-6 4h6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    Step-by-Step Mathematical Calculation
+                    Step-by-Step Distance Breakdown
                 </h3>
 
                 <div class="space-y-3 text-xs mono">
                     <!-- Step 1: Differences -->
                     <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
-                        <span class="text-slate-400">1. Coordinate Differences:</span>
+                        <span class="text-slate-400">1. Coordinate Offsets (Δ):</span>
                         <div class="text-right">
-                            <p class="text-indigo-300">Δx = <span id="calc-dx-formula">0 - 3 = -3</span></p>
-                            <p class="text-emerald-300">Δy = <span id="calc-dy-formula">0 - 4 = -4</span></p>
+                            <p class="text-indigo-300">Δx = X₁ - X₂ = <span id="calc-dx-formula">0 - 3 = -3</span></p>
+                            <p class="text-emerald-300">Δy = Y₁ - Y₂ = <span id="calc-dy-formula">0 - 4 = -4</span></p>
                         </div>
                     </div>
 
                     <!-- Step 2: Squares -->
                     <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
-                        <span class="text-slate-400">2. Square Differences:</span>
+                        <span class="text-slate-400">2. Square Offsets:</span>
                         <div class="text-right">
                             <p class="text-indigo-300">Δx² = <span id="calc-dx2-formula">(-3)² = 9</span></p>
                             <p class="text-emerald-300">Δy² = <span id="calc-dy2-formula">(-4)² = 16</span></p>
@@ -135,7 +136,7 @@
 
                     <!-- Step 4: Square Root -->
                     <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
-                        <span class="text-slate-400">4. Square Root:</span>
+                        <span class="text-slate-400">4. Square Root (Euclidean Distance):</span>
                         <span class="text-cyan-300" id="calc-sqrt-formula">√25 = 5</span>
                     </div>
                 </div>
@@ -143,7 +144,7 @@
 
         </div>
 
-        <!-- Right Column: Visual Canvas & Result Display -->
+        <!-- Right Column: Results & Centered Interactive Canvas -->
         <div class="lg:col-span-6 flex flex-col gap-6">
 
             <!-- Result Cards -->
@@ -175,17 +176,18 @@
             <!-- Canvas Grid Plotter -->
             <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 shadow-xl flex flex-col items-center justify-center flex-grow">
                 <div class="w-full flex items-center justify-between mb-3 px-2">
-                    <span class="text-xs font-semibold text-slate-300">2D Interactive Canvas</span>
+                    <span class="text-xs font-semibold text-slate-300">Point A Centered Grid</span>
                     <div class="flex items-center gap-4 text-[11px] text-slate-400">
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Point A</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Point B</span>
-                        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-cyan-400"></span> Distance</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-white"></span> Point A (Center)</span>
+                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white"></span> Point B (Drag me)</span>
                     </div>
                 </div>
-                <div class="w-full aspect-square max-w-[460px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800 relative">
+                <div class="w-full aspect-square max-w-[460px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner">
                     <canvas id="gridCanvas" class="w-full h-full block cursor-crosshair"></canvas>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-2 text-center">Interactive Grid: Drag points or edit input coordinates above.</p>
+                <p class="text-[11px] text-slate-400 mt-2 text-center">
+                    📍 <strong class="text-indigo-400">Point A</strong> stays locked at canvas center. Click & drag <strong class="text-emerald-400">Point B</strong> to move it!
+                </p>
             </div>
 
         </div>
@@ -194,22 +196,22 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        <p>Built for simple 2D coordinate geometry and unit scaling.</p>
+        <p>Built for 2D coordinate calculations with a fixed-origin visualizer.</p>
     </footer>
 
-    <!-- Notification Toast -->
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-medium translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
         Copied to clipboard!
     </div>
 
     <script>
-        // Form & Input elements
+        // DOM Input elements
         const x1Input = document.getElementById('x1');
         const y1Input = document.getElementById('y1');
         const x2Input = document.getElementById('x2');
         const y2Input = document.getElementById('y2');
 
-        // Calculation Output Elements
+        // Output Formula breakdown elements
         const calcDxFormula = document.getElementById('calc-dx-formula');
         const calcDyFormula = document.getElementById('calc-dy-formula');
         const calcDx2Formula = document.getElementById('calc-dx2-formula');
@@ -217,22 +219,21 @@
         const calcSumFormula = document.getElementById('calc-sum-formula');
         const calcSqrtFormula = document.getElementById('calc-sqrt-formula');
 
-        // Result Banner Elements
+        // Result displays
         const resultDistance = document.getElementById('result-distance');
         const result100m = document.getElementById('result-100m');
         const mBreakdown = document.getElementById('m-breakdown');
 
-        // Buttons
+        // Action controls
         const btnReset = document.getElementById('btn-reset');
         const btnCopyDist = document.getElementById('btn-copy-dist');
         const presetBtns = document.querySelectorAll('.preset-btn');
         const toast = document.getElementById('toast');
 
-        // Canvas Setup
+        // Canvas element & state
         const canvas = document.getElementById('gridCanvas');
         const ctx = canvas.getContext('2d');
-
-        let isDraggingPoint = null;
+        let isDraggingPointB = false;
 
         function calculate() {
             const x1 = parseFloat(x1Input.value) || 0;
@@ -250,12 +251,12 @@
             const distance = Math.sqrt(sum);
             const dist100m = distance * 100;
 
-            // Format numbers nicely
+            // Formatter helper
             const fmt = num => Number.isInteger(num) ? num.toString() : num.toFixed(3);
 
-            // Update Formulas Display
-            calcDxFormula.textContent = `${x1} - (${x2}) = ${fmt(dx)}`;
-            calcDyFormula.textContent = `${y1} - (${y2}) = ${fmt(dy)}`;
+            // Update formula displays
+            calcDxFormula.textContent = `${x1} - ${x2} = ${fmt(dx)}`;
+            calcDyFormula.textContent = `${y1} - ${y2} = ${fmt(dy)}`;
 
             calcDx2Formula.textContent = `(${fmt(dx)})² = ${fmt(dx2)}`;
             calcDy2Formula.textContent = `(${fmt(dy)})² = ${fmt(dy2)}`;
@@ -263,18 +264,19 @@
             calcSumFormula.textContent = `${fmt(dx2)} + ${fmt(dy2)} = ${fmt(sum)}`;
             calcSqrtFormula.textContent = `√(${fmt(sum)}) = ${fmt(distance)}`;
 
-            // Update Key Result Displays
+            // Update banner summary
             resultDistance.textContent = fmt(distance);
             result100m.textContent = fmt(dist100m);
             mBreakdown.textContent = `(${fmt(distance)} units × 100m = ${fmt(dist100m)}m)`;
 
-            // Render updated points on canvas
-            drawGrid(x1, y1, x2, y2);
+            // Draw visual canvas where Point A is ALWAYS CENTERED
+            drawCenteredGrid(x1, y1, x2, y2);
         }
 
-        function drawGrid(x1, y1, x2, y2) {
+        function drawCenteredGrid(x1, y1, x2, y2) {
             const rect = canvas.parentNode.getBoundingClientRect();
             const dpr = window.devicePixelRatio || 1;
+            
             canvas.width = rect.width * dpr;
             canvas.height = rect.width * dpr;
             ctx.scale(dpr, dpr);
@@ -284,111 +286,138 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            // Calculate grid scale to fit points dynamically
-            const padding = 2;
-            const maxCoord = Math.max(
-                Math.abs(x1), Math.abs(x2),
-                Math.abs(y1), Math.abs(y2),
-                5 // Minimum bounds range
-            ) + padding;
-
-            const scale = (width / 2) / maxCoord;
+            // Point A (X1, Y1) is fixed at center pixel coordinates
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // Helper to transform math coordinates (cartesian) to canvas pixels
-            const toCanvasX = x => centerX + x * scale;
-            const toCanvasY = y => centerY - y * scale; // Flip Y for standard Cartesian graph
+            // Relative offsets from Point A to Point B in Cartesian coordinates
+            const relX = x2 - x1;
+            const relY = y2 - y1;
 
-            // Helper to transform canvas pixels to math coordinates
-            canvas.toMathX = px => (px - centerX) / scale;
-            canvas.toMathY = py => (centerY - py) / scale;
+            // Compute dynamic scale factor so Point B is always comfortably inside canvas view
+            const maxOffset = Math.max(Math.abs(relX), Math.abs(relY), 5) + 3;
+            const scale = (width / 2) / maxCoordBound(maxOffset);
 
-            // Draw Grid Lines
+            // Store screen transformation function for touch/drag calculation
+            canvas.toCartesianOffset = (px, py) => {
+                return {
+                    dx: (px - centerX) / scale,
+                    dy: (centerY - py) / scale
+                };
+            };
+
+            // Draw Background Grid Lines
             ctx.strokeStyle = '#1e293b';
             ctx.lineWidth = 1;
 
-            const step = Math.max(1, Math.pow(10, Math.floor(Math.log10(maxCoord)))) / 2;
+            const gridStep = Math.max(1, Math.pow(10, Math.floor(Math.log10(maxOffset)))) / 2 || 1;
 
-            for (let i = -Math.ceil(maxCoord); i <= Math.ceil(maxCoord); i += (step || 1)) {
-                // Vertical lines
-                ctx.beginPath();
-                ctx.moveTo(toCanvasX(i), 0);
-                ctx.lineTo(toCanvasX(i), height);
-                ctx.stroke();
+            for (let i = -Math.ceil(maxOffset * 2); i <= Math.ceil(maxOffset * 2); i += gridStep) {
+                // Vertical lines relative to center
+                const gridPx = centerX + i * scale;
+                if (gridPx >= 0 && gridPx <= width) {
+                    ctx.beginPath();
+                    ctx.moveTo(gridPx, 0);
+                    ctx.lineTo(gridPx, height);
+                    ctx.stroke();
+                }
 
-                // Horizontal lines
-                ctx.beginPath();
-                ctx.moveTo(0, toCanvasY(i));
-                ctx.lineTo(width, toCanvasY(i));
-                ctx.stroke();
+                // Horizontal lines relative to center
+                const gridPy = centerY - i * scale;
+                if (gridPy >= 0 && gridPy <= height) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, gridPy);
+                    ctx.lineTo(width, gridPy);
+                    ctx.stroke();
+                }
             }
 
-            // Draw Main Axes
-            ctx.strokeStyle = '#475569';
+            // Draw Axis Lines passing through Point A (Canvas Center)
+            ctx.strokeStyle = '#334155';
             ctx.lineWidth = 1.5;
 
-            // X-Axis
+            // X-Axis (Horizontal through Center)
             ctx.beginPath();
             ctx.moveTo(0, centerY);
             ctx.lineTo(width, centerY);
             ctx.stroke();
 
-            // Y-Axis
+            // Y-Axis (Vertical through Center)
             ctx.beginPath();
             ctx.moveTo(centerX, 0);
             ctx.lineTo(centerX, height);
             ctx.stroke();
 
-            const p1Canvas = { x: toCanvasX(x1), y: toCanvasY(y1) };
-            const p2Canvas = { x: toCanvasX(x2), y: toCanvasY(y2) };
+            // Canvas Pixel Position of Point B
+            const pB_CanvasX = centerX + relX * scale;
+            const pB_CanvasY = centerY - relY * scale;
 
-            // Draw Right Triangle Components (dx and dy legs)
+            // Draw Right Triangle legs (Offset paths)
             ctx.setLineDash([4, 4]);
-            ctx.strokeStyle = '#6366f1'; // dx leg
+            
+            // Delta X leg
+            ctx.strokeStyle = '#6366f1';
             ctx.beginPath();
-            ctx.moveTo(p1Canvas.x, p1Canvas.y);
-            ctx.lineTo(p2Canvas.x, p1Canvas.y);
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(pB_CanvasX, centerY);
             ctx.stroke();
 
-            ctx.strokeStyle = '#10b981'; // dy leg
+            // Delta Y leg
+            ctx.strokeStyle = '#10b981';
             ctx.beginPath();
-            ctx.moveTo(p2Canvas.x, p1Canvas.y);
-            ctx.lineTo(p2Canvas.x, p2Canvas.y);
+            ctx.moveTo(pB_CanvasX, centerY);
+            ctx.lineTo(pB_CanvasX, pB_CanvasY);
             ctx.stroke();
+            
             ctx.setLineDash([]);
 
-            // Draw Direct Hypotenuse (Distance line)
+            // Draw Direct Hypotenuse Line (A -> B)
             ctx.strokeStyle = '#22d3ee';
             ctx.lineWidth = 2.5;
             ctx.beginPath();
-            ctx.moveTo(p1Canvas.x, p1Canvas.y);
-            ctx.lineTo(p2Canvas.x, p2Canvas.y);
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(pB_CanvasX, pB_CanvasY);
             ctx.stroke();
 
-            // Draw Point A (X1, Y1)
+            // Draw Point A (CENTER ANCHOR)
             ctx.fillStyle = '#6366f1';
             ctx.beginPath();
-            ctx.arc(p1Canvas.x, p1Canvas.y, 7, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.stroke();
 
-            // Draw Point B (X2, Y2)
+            // Pulse ring around Point A to emphasize it is the origin
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 13, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Draw Point B (TARGET DRAGGABLE)
             ctx.fillStyle = '#10b981';
             ctx.beginPath();
-            ctx.arc(p2Canvas.x, p2Canvas.y, 7, 0, Math.PI * 2);
+            ctx.arc(pB_CanvasX, pB_CanvasY, 8, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.stroke();
 
-            // Label Points
-            ctx.font = '11px JetBrains Mono, monospace';
-            ctx.fillStyle = '#e2e8f0';
-            ctx.fillText(`A (${x1}, ${y1})`, p1Canvas.x + 10, p1Canvas.y - 10);
-            ctx.fillText(`B (${x2}, ${y2})`, p2Canvas.x + 10, p2Canvas.y - 10);
+            // Labels
+            ctx.font = '600 11px JetBrains Mono, monospace';
+            
+            // Point A Label (Fixed Center)
+            ctx.fillStyle = '#a5b4fc';
+            ctx.fillText(`A (${x1}, ${y1}) [CENTER]`, centerX + 12, centerY - 12);
+
+            // Point B Label
+            ctx.fillStyle = '#6ee7b7';
+            ctx.fillText(`B (${x2}, ${y2})`, pB_CanvasX + 12, pB_CanvasY - 12);
+        }
+
+        function maxCoordBound(val) {
+            return Math.max(val, 6);
         }
 
         function getCanvasMousePos(e) {
@@ -409,51 +438,47 @@
             const y2 = parseFloat(y2Input.value) || 0;
 
             const rect = canvas.getBoundingClientRect();
-            const maxCoord = Math.max(Math.abs(x1), Math.abs(x2), Math.abs(y1), Math.abs(y2), 5) + 2;
-            const scale = (rect.width / 2) / maxCoord;
-            const centerX = rect.width / 2;
-            const centerY = rect.width / 2;
+            const relX = x2 - x1;
+            const relY = y2 - y1;
+            const maxOffset = Math.max(Math.abs(relX), Math.abs(relY), 5) + 3;
+            const scale = (rect.width / 2) / maxCoordBound(maxOffset);
 
-            const p1 = { x: centerX + x1 * scale, y: centerY - y1 * scale };
-            const p2 = { x: centerX + x2 * scale, y: centerY - y2 * scale };
+            const pB_CanvasX = (rect.width / 2) + relX * scale;
+            const pB_CanvasY = (rect.width / 2) - relY * scale;
 
-            const dist1 = Math.hypot(pos.x - p1.x, pos.y - p1.y);
-            const dist2 = Math.hypot(pos.x - p2.x, pos.y - p2.y);
+            const distToB = Math.hypot(pos.x - pB_CanvasX, pos.y - pB_CanvasY);
 
-            if (dist1 < 20) isDraggingPoint = 'A';
-            else if (dist2 < 20) isDraggingPoint = 'B';
+            // If user clicks on Point B (or anywhere close), enable dragging
+            if (distToB < 25) {
+                isDraggingPointB = true;
+            }
         }
 
         function handlePointerMove(e) {
-            if (!isDraggingPoint) return;
+            if (!isDraggingPointB) return;
             e.preventDefault();
-            const pos = getCanvasMousePos(e);
-            const mathX = Math.round(canvas.toMathX(pos.x) * 10) / 10;
-            const mathY = Math.round(canvas.toMathY(pos.y) * 10) / 10;
 
-            if (isDraggingPoint === 'A') {
-                x1Input.value = mathX;
-                y1Input.value = mathY;
-            } else if (isDraggingPoint === 'B') {
-                x2Input.value = mathX;
-                y2Input.value = mathY;
-            }
+            const pos = getCanvasMousePos(e);
+            const offset = canvas.toCartesianOffset(pos.x, pos.y);
+
+            const x1 = parseFloat(x1Input.value) || 0;
+            const y1 = parseFloat(y1Input.value) || 0;
+
+            // Calculate new Point B position relative to fixed Point A
+            const newX2 = Math.round((x1 + offset.dx) * 10) / 10;
+            const newY2 = Math.round((y1 + offset.dy) * 10) / 10;
+
+            x2Input.value = newX2;
+            y2Input.value = newY2;
+
             calculate();
         }
 
         function handlePointerUp() {
-            isDraggingPoint = null;
+            isDraggingPointB = false;
         }
 
-        function showToast(msg) {
-            toast.textContent = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2000);
-        }
-
-        // Copy functionality using standard execCommand wrapper
+        // Copy button action
         btnCopyDist.addEventListener('click', () => {
             const val = resultDistance.textContent;
             const textToCopy = `${val} units (${result100m.textContent} meters)`;
@@ -465,15 +490,18 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            showToast('Copied distance to clipboard!');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
         });
 
-        // Event listeners for inputs
+        // Attach listeners to input fields
         [x1Input, y1Input, x2Input, y2Input].forEach(input => {
             input.addEventListener('input', calculate);
         });
 
-        // Presets handler
+        // Presets toolbar handler
         presetBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 x1Input.value = btn.dataset.x1;
@@ -484,7 +512,7 @@
             });
         });
 
-        // Reset fields
+        // Reset button handler
         btnReset.addEventListener('click', () => {
             x1Input.value = 0;
             y1Input.value = 0;
@@ -493,7 +521,7 @@
             calculate();
         });
 
-        // Canvas Pointer listeners
+        // Canvas mouse & touch handlers
         canvas.addEventListener('mousedown', handlePointerDown);
         canvas.addEventListener('mousemove', handlePointerMove);
         window.addEventListener('mouseup', handlePointerUp);
@@ -502,10 +530,9 @@
         canvas.addEventListener('touchmove', handlePointerMove, { passive: false });
         window.addEventListener('touchend', handlePointerUp);
 
-        // Window resize handler
         window.addEventListener('resize', calculate);
 
-        // Initial Calculation on Load
+        // Initial launch
         window.onload = () => {
             calculate();
         };
