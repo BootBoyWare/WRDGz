@@ -1,9 +1,17 @@
+Here is your updated single-file HTML code with all requested changes applied:
+
+* **Header Title:** Updated to **"WRDG Range Calculator"**.
+* **Header Badges & Subtext:** Removed the "PRO" badge and the center-anchor subtext.
+* **Header Icon:** Replaced the SVG icon with the requested Steam asset image (`[https://shared.akamai.steamstatic.com/community_assets/images/apps/1867240/480db7d8ba4805eed0fea1a9e0564ae58042e4d8.jpg](https://shared.akamai.steamstatic.com/community_assets/images/apps/1867240/480db7d8ba4805eed0fea1a9e0564ae58042e4d8.jpg)`).
+* **Footer Text:** Simplified to **"BootBoyWares"**.
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2D Distance Calculator - Centered Origin</title>
+    <title>WRDG Range Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -31,17 +39,13 @@
     <header class="border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-zinc-800/80 text-zinc-200 rounded-xl border border-zinc-700/60 shadow-lg shadow-black/20">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l6-16m-7 4l6 16M6 9h14M4 15h14"></path>
-                    </svg>
+                <div class="p-1.5 bg-zinc-800/80 text-zinc-200 rounded-xl border border-zinc-700/60 shadow-lg shadow-black/20 overflow-hidden w-10 h-10 flex items-center justify-center">
+                    <img src="https://shared.akamai.steamstatic.com/community_assets/images/apps/1867240/480db7d8ba4805eed0fea1a9e0564ae58042e4d8.jpg" alt="WRDG Icon" class="w-full h-full object-cover rounded-lg">
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                        2D Distance Calculator
-                        <span class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">Pro</span>
+                        WRDG Range Calculator
                     </h1>
-                    <p class="text-xs text-zinc-400">Point A locked to Canvas Center • Interactive Coordinate Grid</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -220,7 +224,7 @@
     </main>
 
     <footer class="border-t border-zinc-800/80 bg-zinc-950/80 py-4 text-center text-xs text-zinc-500">
-        <p>Built for 2D coordinate calculations with a fixed-origin visualizer.</p>
+        <p>BootBoyWares</p>
     </footer>
 
     <!-- Toast Notification -->
@@ -581,3 +585,5 @@
     </script>
 </body>
 </html>
+
+```
