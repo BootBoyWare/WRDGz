@@ -9,64 +9,101 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .mono { font-family: 'JetBrains Mono', monospace; }
+        /* Custom scrollbar styling for slick dark mode appearance */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30">
+                <div class="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 shadow-lg shadow-indigo-500/10">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l6-16m-7 4l6 16M6 9h14M4 15h14"></path>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white">2D Distance Calculator</h1>
-                    <p class="text-xs text-slate-400">Point A locked to Canvas Center</p>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        2D Distance Calculator
+                        <span class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Pro</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Point A locked to Canvas Center • Interactive Coordinate Grid</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="btn-reset" class="px-3.5 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700/60 flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            <div class="flex items-center gap-3">
+                <!-- Custom Unit Multiplier Control -->
+                <div class="flex items-center bg-slate-800 rounded-lg p-1 border border-slate-700/60">
+                    <span class="text-xs text-slate-400 px-2 font-medium">Unit Scale:</span>
+                    <select id="unit-scale-select" class="bg-slate-900 text-indigo-300 text-xs font-mono font-medium rounded-md px-2 py-1 outline-none border border-slate-700/80 cursor-pointer hover:border-indigo-500 transition">
+                        <option value="1">1 unit = 1m</option>
+                        <option value="100" selected>1 unit = 100m</option>
+                        <option value="1000">1 unit = 1km</option>
+                        <option value="0.3048">1 unit = 1 ft</option>
+                    </select>
+                </div>
+
+                <button id="btn-reset" class="px-3.5 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition border border-slate-700/60 flex items-center gap-1.5 active:scale-95">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
                     Reset Fields
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <!-- Left Column: Inputs & Step-by-step Math -->
+        <!-- Left Column: Inputs, Presets & Step-by-Step Math -->
         <div class="lg:col-span-6 flex flex-col gap-6">
 
-            <!-- Presets Toolbar -->
-            <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4">
-                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2.5">Quick Presets</span>
+            <!-- Quick Presets Toolbar -->
+            <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-sm backdrop-blur-sm">
+                <div class="flex items-center justify-between mb-2.5">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quick Geometry Presets</span>
+                    <span class="text-[11px] text-slate-500">Click to apply</span>
+                </div>
                 <div class="flex flex-wrap gap-2">
-                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="0" data-y1="0" data-x2="3" data-y2="4">
-                        3-4-5 Right Triangle
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-indigo-600/30 hover:border-indigo-500/50 text-slate-200 border border-slate-600/40 transition active:scale-95" data-x1="0" data-y1="0" data-x2="3" data-y2="4">
+                        📐 3-4-5 Right Triangle
                     </button>
-                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="10" data-y1="10" data-x2="16" data-y2="18">
-                        Offset Point A (10,10)
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-indigo-600/30 hover:border-indigo-500/50 text-slate-200 border border-slate-600/40 transition active:scale-95" data-x1="10" data-y1="10" data-x2="16" data-y2="18">
+                        📍 Offset Point A (10,10)
                     </button>
-                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-200 border border-slate-600/40 transition" data-x1="-5" data-y1="12" data-x2="25" data-y2="-30">
-                        Large Span (-5,12) to (25,-30)
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-indigo-600/30 hover:border-indigo-500/50 text-slate-200 border border-slate-600/40 transition active:scale-95" data-x1="-5" data-y1="12" data-x2="25" data-y2="-30">
+                        🌐 Large Span (-5,12) to (25,-30)
+                    </button>
+                    <button class="preset-btn px-3 py-1.5 text-xs rounded-lg bg-slate-700/60 hover:bg-indigo-600/30 hover:border-indigo-500/50 text-slate-200 border border-slate-600/40 transition active:scale-95" data-x1="-8" data-y1="-6" data-x2="12" data-y2="15">
+                        ⚖️ Diagonal Quad 4 to 1
                     </button>
                 </div>
             </div>
 
-            <!-- Coordinate Input Form -->
-            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl relative overflow-hidden backdrop-blur-sm">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Point A (Center Reference) -->
-                    <div class="p-4 bg-slate-900/60 rounded-xl border border-indigo-500/30">
+                    
+                    <!-- Point A (Center Anchor Reference) -->
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-indigo-500/30 shadow-inner">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block"></span>
-                                <h2 class="text-sm font-semibold text-indigo-300">Point A (Center Anchor)</h2>
+                                <span class="w-3 h-3 rounded-full bg-indigo-500 inline-block ring-4 ring-indigo-500/20"></span>
+                                <h2 class="text-sm font-semibold text-indigo-300">Point A (Origin Anchor)</h2>
                             </div>
-                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono">Canvas Center</span>
+                            <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded font-mono border border-indigo-500/30">Canvas Center</span>
                         </div>
                         <div class="space-y-3">
                             <div>
@@ -80,14 +117,14 @@
                         </div>
                     </div>
 
-                    <!-- Point B (Target) -->
-                    <div class="p-4 bg-slate-900/60 rounded-xl border border-emerald-500/30">
+                    <!-- Point B (Target Draggable) -->
+                    <div class="p-4 bg-slate-900/60 rounded-xl border border-emerald-500/30 shadow-inner">
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block ring-4 ring-emerald-500/20"></span>
                                 <h2 class="text-sm font-semibold text-emerald-300">Point B (Target)</h2>
                             </div>
-                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono">Interactive Drag</span>
+                            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-mono border border-emerald-500/30">Interactive Drag</span>
                         </div>
                         <div class="space-y-3">
                             <div>
@@ -103,105 +140,116 @@
                 </div>
             </div>
 
-            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl space-y-4">
-                <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m-6 4h6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    Step-by-Step Distance Breakdown
-                </h3>
+            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-6 shadow-xl space-y-4 backdrop-blur-sm">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m-6 4h6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Step-by-Step Distance Breakdown
+                    </h3>
+                    <span class="text-[11px] text-slate-400 mono">Formula: d = √[(Δx)² + (Δy)²]</span>
+                </div>
 
                 <div class="space-y-3 text-xs mono">
-                    <!-- Step 1: Differences -->
-                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
+                    <!-- Step 1: Coordinate Differences -->
+                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
                         <span class="text-slate-400">1. Coordinate Offsets (Δ):</span>
-                        <div class="text-right">
-                            <p class="text-indigo-300">Δx = X₁ - X₂ = <span id="calc-dx-formula">0 - 3 = -3</span></p>
-                            <p class="text-emerald-300">Δy = Y₁ - Y₂ = <span id="calc-dy-formula">0 - 4 = -4</span></p>
+                        <div class="text-right space-y-0.5">
+                            <p class="text-indigo-300">Δx = X₂ - X₁ = <span id="calc-dx-formula">3 - 0 = 3</span></p>
+                            <p class="text-emerald-300">Δy = Y₂ - Y₁ = <span id="calc-dy-formula">4 - 0 = 4</span></p>
                         </div>
                     </div>
 
                     <!-- Step 2: Squares -->
-                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
+                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
                         <span class="text-slate-400">2. Square Offsets:</span>
-                        <div class="text-right">
-                            <p class="text-indigo-300">Δx² = <span id="calc-dx2-formula">(-3)² = 9</span></p>
-                            <p class="text-emerald-300">Δy² = <span id="calc-dy2-formula">(-4)² = 16</span></p>
+                        <div class="text-right space-y-0.5">
+                            <p class="text-indigo-300">Δx² = <span id="calc-dx2-formula">(3)² = 9</span></p>
+                            <p class="text-emerald-300">Δy² = <span id="calc-dy2-formula">(4)² = 16</span></p>
                         </div>
                     </div>
 
-                    <!-- Step 3: Sum -->
-                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
+                    <!-- Step 3: Sum of Squares -->
+                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
                         <span class="text-slate-400">3. Sum of Squares:</span>
-                        <span class="text-amber-300" id="calc-sum-formula">9 + 16 = 25</span>
+                        <span class="text-amber-300 font-semibold" id="calc-sum-formula">9 + 16 = 25</span>
                     </div>
 
                     <!-- Step 4: Square Root -->
-                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center">
+                    <div class="p-3 bg-slate-900/50 rounded-lg border border-slate-800 flex justify-between items-center hover:border-slate-700 transition">
                         <span class="text-slate-400">4. Square Root (Euclidean Distance):</span>
-                        <span class="text-cyan-300" id="calc-sqrt-formula">√25 = 5</span>
+                        <span class="text-cyan-300 font-semibold" id="calc-sqrt-formula">√25 = 5</span>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Right Column: Results & Centered Interactive Canvas -->
         <div class="lg:col-span-6 flex flex-col gap-6">
 
-            <!-- Result Cards -->
+            <!-- Result Display Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Direct Distance -->
-                <div class="bg-gradient-to-br from-indigo-900/50 to-slate-800 border border-indigo-500/30 rounded-2xl p-5 relative overflow-hidden shadow-lg">
+                <!-- Euclidean Distance Card -->
+                <div class="bg-gradient-to-br from-indigo-900/40 via-slate-800 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group hover:border-indigo-500/50 transition">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/20 transition"></div>
                     <span class="text-xs text-indigo-300 font-medium uppercase tracking-wider block mb-1">Euclidean Distance</span>
                     <div class="flex items-baseline gap-2">
                         <span id="result-distance" class="text-3xl font-extrabold text-white mono">5.000</span>
                         <span class="text-xs text-slate-400">units</span>
                     </div>
-                    <button id="btn-copy-dist" class="mt-3 text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition">
+                    <button id="btn-copy-dist" class="mt-3 text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 transition font-medium active:scale-95">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        Copy Distance
+                        Copy Result
                     </button>
                 </div>
 
-                <!-- Distance in 100 Meters -->
-                <div class="bg-gradient-to-br from-emerald-900/50 to-slate-800 border border-emerald-500/30 rounded-2xl p-5 relative overflow-hidden shadow-lg">
-                    <span class="text-xs text-emerald-300 font-medium uppercase tracking-wider block mb-1">Distance (in 100m units)</span>
+                <!-- Scaled Distance Card -->
+                <div class="bg-gradient-to-br from-emerald-900/40 via-slate-800 to-slate-900 border border-emerald-500/30 rounded-2xl p-5 relative overflow-hidden shadow-lg group hover:border-emerald-500/50 transition">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
+                    <span id="scaled-unit-label" class="text-xs text-emerald-300 font-medium uppercase tracking-wider block mb-1">Scaled Distance (100m)</span>
                     <div class="flex items-baseline gap-2">
-                        <span id="result-100m" class="text-3xl font-extrabold text-emerald-400 mono">500</span>
-                        <span class="text-xs text-slate-400">meters</span>
+                        <span id="result-100m" class="text-3xl font-extrabold text-emerald-400 mono">500.000</span>
+                        <span id="scaled-unit-name" class="text-xs text-slate-400">meters</span>
                     </div>
                     <p class="text-[11px] text-slate-400 mt-1" id="m-breakdown">(5 units × 100m = 500m)</p>
                 </div>
             </div>
 
-            <!-- Canvas Grid Plotter -->
-            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 shadow-xl flex flex-col items-center justify-center flex-grow">
+            <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 shadow-xl flex flex-col items-center justify-between flex-grow backdrop-blur-sm">
                 <div class="w-full flex items-center justify-between mb-3 px-2">
-                    <span class="text-xs font-semibold text-slate-300">Point A Centered Grid</span>
+                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        Point A Centered Grid Plotter
+                    </span>
                     <div class="flex items-center gap-4 text-[11px] text-slate-400">
-                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-white"></span> Point A (Center)</span>
-                        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white"></span> Point B (Drag me)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500 border border-white"></span> Point A</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-white"></span> Point B (Drag)</span>
                     </div>
                 </div>
-                <div class="w-full aspect-square max-w-[460px] bg-slate-900 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner">
-                    <canvas id="gridCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+                
+                <div class="w-full aspect-square max-w-[460px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 relative shadow-inner flex items-center justify-center">
+                    <canvas id="gridCanvas" class="w-full h-full block cursor-crosshair touch-none"></canvas>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-2 text-center">
-                    📍 <strong class="text-indigo-400">Point A</strong> stays locked at canvas center. Click & drag <strong class="text-emerald-400">Point B</strong> to move it!
-                </p>
+
+                <div class="w-full mt-3 px-2 flex items-center justify-between text-[11px] text-slate-400">
+                    <p class="flex items-center gap-1">
+                        📍 <strong class="text-indigo-400">Point A</strong> stays locked at canvas center. Drag <strong class="text-emerald-400">Point B</strong>!
+                    </p>
+                    <span id="polar-angle" class="mono text-cyan-300">Angle: 0.0°</span>
+                </div>
             </div>
 
         </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+    <footer class="border-t border-slate-800/80 bg-slate-900/50 py-4 text-center text-xs text-slate-500">
         <p>Built for 2D coordinate calculations with a fixed-origin visualizer.</p>
     </footer>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-medium translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50">
-        Copied to clipboard!
+    <div id="toast" class="fixed bottom-6 right-6 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium translate-y-20 opacity-0 transition-all duration-300 pointer-events-none z-50 border border-indigo-400/30 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span>Copied to clipboard!</span>
     </div>
 
     <script>
@@ -210,6 +258,7 @@
         const y1Input = document.getElementById('y1');
         const x2Input = document.getElementById('x2');
         const y2Input = document.getElementById('y2');
+        const unitScaleSelect = document.getElementById('unit-scale-select');
 
         // Output Formula breakdown elements
         const calcDxFormula = document.getElementById('calc-dx-formula');
@@ -223,6 +272,9 @@
         const resultDistance = document.getElementById('result-distance');
         const result100m = document.getElementById('result-100m');
         const mBreakdown = document.getElementById('m-breakdown');
+        const scaledUnitLabel = document.getElementById('scaled-unit-label');
+        const scaledUnitName = document.getElementById('scaled-unit-name');
+        const polarAngle = document.getElementById('polar-angle');
 
         // Action controls
         const btnReset = document.getElementById('btn-reset');
@@ -230,33 +282,47 @@
         const presetBtns = document.querySelectorAll('.preset-btn');
         const toast = document.getElementById('toast');
 
-        // Canvas element & state
+        // Canvas element & drag state
         const canvas = document.getElementById('gridCanvas');
         const ctx = canvas.getContext('2d');
         let isDraggingPointB = false;
 
+        /**
+         * Computes Euclidean distance and updates UI elements.
+         */
         function calculate() {
             const x1 = parseFloat(x1Input.value) || 0;
             const y1 = parseFloat(y1Input.value) || 0;
             const x2 = parseFloat(x2Input.value) || 0;
             const y2 = parseFloat(y2Input.value) || 0;
 
-            const dx = x1 - x2;
-            const dy = y1 - y2;
+            const scaleMultiplier = parseFloat(unitScaleSelect.value) || 100;
+
+            // Correct Cartesian difference: Target (B) minus Origin (A)
+            const dx = x2 - x1;
+            const dy = y2 - y1;
 
             const dx2 = dx * dx;
             const dy2 = dy * dy;
 
             const sum = dx2 + dy2;
             const distance = Math.sqrt(sum);
-            const dist100m = distance * 100;
+            const scaledDistance = distance * scaleMultiplier;
 
-            // Formatter helper
-            const fmt = num => Number.isInteger(num) ? num.toString() : num.toFixed(3);
+            // Calculate bearing/angle in degrees from Point A to Point B
+            let angleRad = Math.atan2(dy, dx);
+            let angleDeg = angleRad * (180 / Math.PI);
+            if (angleDeg < 0) angleDeg += 360;
 
-            // Update formula displays
-            calcDxFormula.textContent = `${x1} - ${x2} = ${fmt(dx)}`;
-            calcDyFormula.textContent = `${y1} - ${y2} = ${fmt(dy)}`;
+            // Number formatting helper
+            const fmt = num => {
+                if (Number.isInteger(num)) return num.toString();
+                return num.toFixed(3);
+            };
+
+            // Update formula step displays
+            calcDxFormula.textContent = `${x2} - ${x1} = ${fmt(dx)}`;
+            calcDyFormula.textContent = `${y2} - ${y1} = ${fmt(dy)}`;
 
             calcDx2Formula.textContent = `(${fmt(dx)})² = ${fmt(dx2)}`;
             calcDy2Formula.textContent = `(${fmt(dy)})² = ${fmt(dy2)}`;
@@ -264,41 +330,57 @@
             calcSumFormula.textContent = `${fmt(dx2)} + ${fmt(dy2)} = ${fmt(sum)}`;
             calcSqrtFormula.textContent = `√(${fmt(sum)}) = ${fmt(distance)}`;
 
-            // Update banner summary
+            // Update result cards
             resultDistance.textContent = fmt(distance);
-            result100m.textContent = fmt(dist100m);
-            mBreakdown.textContent = `(${fmt(distance)} units × 100m = ${fmt(dist100m)}m)`;
+            result100m.textContent = fmt(scaledDistance);
 
-            // Draw visual canvas where Point A is ALWAYS CENTERED
+            // Dynamic unit labels based on scale selection
+            let unitText = 'meters';
+            if (scaleMultiplier === 1) unitText = 'meters';
+            else if (scaleMultiplier === 1000) unitText = 'km';
+            else if (scaleMultiplier === 0.3048) unitText = 'feet';
+            else unitText = `${scaleMultiplier}m units`;
+
+            scaledUnitLabel.textContent = `Scaled Distance (${unitScaleSelect.options[unitScaleSelect.selectedIndex].text.split('=')[1].trim()})`;
+            scaledUnitName.textContent = unitText;
+            mBreakdown.textContent = `(${fmt(distance)} units × ${scaleMultiplier} = ${fmt(scaledDistance)}${unitText.charAt(0)})`;
+
+            polarAngle.textContent = `Angle: ${angleDeg.toFixed(1)}°`;
+
+            // Render interactive canvas grid centered on Point A
             drawCenteredGrid(x1, y1, x2, y2);
         }
 
+        /**
+         * Renders the 2D visualizer grid with Point A locked at the canvas center.
+         */
         function drawCenteredGrid(x1, y1, x2, y2) {
-            const rect = canvas.parentNode.getBoundingClientRect();
+            const container = canvas.parentNode;
+            const rect = container.getBoundingClientRect();
             const dpr = window.devicePixelRatio || 1;
             
             canvas.width = rect.width * dpr;
-            canvas.height = rect.width * dpr;
+            canvas.height = rect.height * dpr;
             ctx.scale(dpr, dpr);
 
             const width = rect.width;
-            const height = rect.width;
+            const height = rect.height;
 
             ctx.clearRect(0, 0, width, height);
 
-            // Point A (X1, Y1) is fixed at center pixel coordinates
+            // Point A (Origin) locked at center of canvas
             const centerX = width / 2;
             const centerY = height / 2;
 
-            // Relative offsets from Point A to Point B in Cartesian coordinates
+            // Offset vector from Point A to Point B
             const relX = x2 - x1;
             const relY = y2 - y1;
 
-            // Compute dynamic scale factor so Point B is always comfortably inside canvas view
+            // Dynamic scale factor calculation to fit points within viewport
             const maxOffset = Math.max(Math.abs(relX), Math.abs(relY), 5) + 3;
-            const scale = (width / 2) / maxCoordBound(maxOffset);
+            const scale = (width / 2) / Math.max(maxOffset, 6);
 
-            // Store screen transformation function for touch/drag calculation
+            // Conversion helper function attached to canvas
             canvas.toCartesianOffset = (px, py) => {
                 return {
                     dx: (px - centerX) / scale,
@@ -306,14 +388,14 @@
                 };
             };
 
-            // Draw Background Grid Lines
+            // Grid Lines
             ctx.strokeStyle = '#1e293b';
             ctx.lineWidth = 1;
 
             const gridStep = Math.max(1, Math.pow(10, Math.floor(Math.log10(maxOffset)))) / 2 || 1;
 
             for (let i = -Math.ceil(maxOffset * 2); i <= Math.ceil(maxOffset * 2); i += gridStep) {
-                // Vertical lines relative to center
+                // Vertical grid line
                 const gridPx = centerX + i * scale;
                 if (gridPx >= 0 && gridPx <= width) {
                     ctx.beginPath();
@@ -322,7 +404,7 @@
                     ctx.stroke();
                 }
 
-                // Horizontal lines relative to center
+                // Horizontal grid line
                 const gridPy = centerY - i * scale;
                 if (gridPy >= 0 && gridPy <= height) {
                     ctx.beginPath();
@@ -332,37 +414,37 @@
                 }
             }
 
-            // Draw Axis Lines passing through Point A (Canvas Center)
+            // Central Axes through Point A
             ctx.strokeStyle = '#334155';
             ctx.lineWidth = 1.5;
 
-            // X-Axis (Horizontal through Center)
+            // X-Axis
             ctx.beginPath();
             ctx.moveTo(0, centerY);
             ctx.lineTo(width, centerY);
             ctx.stroke();
 
-            // Y-Axis (Vertical through Center)
+            // Y-Axis
             ctx.beginPath();
             ctx.moveTo(centerX, 0);
             ctx.lineTo(centerX, height);
             ctx.stroke();
 
-            // Canvas Pixel Position of Point B
+            // Screen position of Point B
             const pB_CanvasX = centerX + relX * scale;
             const pB_CanvasY = centerY - relY * scale;
 
-            // Draw Right Triangle legs (Offset paths)
+            // Right triangle projection legs (Dashed)
             ctx.setLineDash([4, 4]);
             
-            // Delta X leg
+            // Delta X Leg
             ctx.strokeStyle = '#6366f1';
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.lineTo(pB_CanvasX, centerY);
             ctx.stroke();
 
-            // Delta Y leg
+            // Delta Y Leg
             ctx.strokeStyle = '#10b981';
             ctx.beginPath();
             ctx.moveTo(pB_CanvasX, centerY);
@@ -371,7 +453,7 @@
             
             ctx.setLineDash([]);
 
-            // Draw Direct Hypotenuse Line (A -> B)
+            // Direct Hypotenuse Vector Line
             ctx.strokeStyle = '#22d3ee';
             ctx.lineWidth = 2.5;
             ctx.beginPath();
@@ -379,45 +461,41 @@
             ctx.lineTo(pB_CanvasX, pB_CanvasY);
             ctx.stroke();
 
-            // Draw Point A (CENTER ANCHOR)
+            // Point A Anchor (Indigo)
             ctx.fillStyle = '#6366f1';
             ctx.beginPath();
             ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Pulse ring around Point A to emphasize it is the origin
+            // Outer Pulse Ring on Center Anchor
             ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.arc(centerX, centerY, 13, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Draw Point B (TARGET DRAGGABLE)
+            // Point B Target (Emerald)
             ctx.fillStyle = '#10b981';
             ctx.beginPath();
             ctx.arc(pB_CanvasX, pB_CanvasY, 8, 0, Math.PI * 2);
             ctx.fill();
             ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2;
             ctx.stroke();
 
-            // Labels
+            // Coordinate Labels
             ctx.font = '600 11px JetBrains Mono, monospace';
             
-            // Point A Label (Fixed Center)
+            // Point A Label
             ctx.fillStyle = '#a5b4fc';
             ctx.fillText(`A (${x1}, ${y1}) [CENTER]`, centerX + 12, centerY - 12);
 
             // Point B Label
             ctx.fillStyle = '#6ee7b7';
             ctx.fillText(`B (${x2}, ${y2})`, pB_CanvasX + 12, pB_CanvasY - 12);
-        }
-
-        function maxCoordBound(val) {
-            return Math.max(val, 6);
         }
 
         function getCanvasMousePos(e) {
@@ -441,15 +519,15 @@
             const relX = x2 - x1;
             const relY = y2 - y1;
             const maxOffset = Math.max(Math.abs(relX), Math.abs(relY), 5) + 3;
-            const scale = (rect.width / 2) / maxCoordBound(maxOffset);
+            const scale = (rect.width / 2) / Math.max(maxOffset, 6);
 
             const pB_CanvasX = (rect.width / 2) + relX * scale;
             const pB_CanvasY = (rect.width / 2) - relY * scale;
 
             const distToB = Math.hypot(pos.x - pB_CanvasX, pos.y - pB_CanvasY);
 
-            // If user clicks on Point B (or anywhere close), enable dragging
-            if (distToB < 25) {
+            // Check if user touched/clicked near Point B
+            if (distToB < 30) {
                 isDraggingPointB = true;
             }
         }
@@ -464,7 +542,7 @@
             const x1 = parseFloat(x1Input.value) || 0;
             const y1 = parseFloat(y1Input.value) || 0;
 
-            // Calculate new Point B position relative to fixed Point A
+            // Round coordinate calculation for smoother UX
             const newX2 = Math.round((x1 + offset.dx) * 10) / 10;
             const newY2 = Math.round((y1 + offset.dy) * 10) / 10;
 
@@ -478,11 +556,12 @@
             isDraggingPointB = false;
         }
 
-        // Copy button action
+        // Copy button listener
         btnCopyDist.addEventListener('click', () => {
             const val = resultDistance.textContent;
-            const textToCopy = `${val} units (${result100m.textContent} meters)`;
+            const textToCopy = `Distance: ${val} units (${result100m.textContent} ${scaledUnitName.textContent})`;
             
+            // Clipboard fallback logic
             const tempInput = document.createElement('input');
             tempInput.value = textToCopy;
             document.body.appendChild(tempInput);
@@ -496,12 +575,13 @@
             }, 2000);
         });
 
-        // Attach listeners to input fields
+        // Event Listeners
         [x1Input, y1Input, x2Input, y2Input].forEach(input => {
             input.addEventListener('input', calculate);
         });
 
-        // Presets toolbar handler
+        unitScaleSelect.addEventListener('change', calculate);
+
         presetBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 x1Input.value = btn.dataset.x1;
@@ -512,7 +592,6 @@
             });
         });
 
-        // Reset button handler
         btnReset.addEventListener('click', () => {
             x1Input.value = 0;
             y1Input.value = 0;
@@ -521,7 +600,7 @@
             calculate();
         });
 
-        // Canvas mouse & touch handlers
+        // Canvas interaction listeners
         canvas.addEventListener('mousedown', handlePointerDown);
         canvas.addEventListener('mousemove', handlePointerMove);
         window.addEventListener('mouseup', handlePointerUp);
@@ -532,7 +611,7 @@
 
         window.addEventListener('resize', calculate);
 
-        // Initial launch
+        // Initial launch on load
         window.onload = () => {
             calculate();
         };
